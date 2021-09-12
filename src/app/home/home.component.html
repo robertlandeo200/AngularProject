@@ -1,0 +1,203 @@
+<header class="toolbar">
+  <a href="/home">
+    <img width="150" alt="Baufest Logo" src="/assets/imgs/Logo-Baufest-blanco.png">
+  </a>
+  <h2>¡Bienvenido al Challenge de Angular!</h2>
+</header>
+<div class="mt-5">
+<div class="row mt-4">
+    <div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="text-center">BUSQUEDA</h5>
+                <form [formGroup]="form" (ngSubmit)="BusquedaPersonajes()">
+                    <div class="row">
+                    <div class="col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-text">Por Personaje</span>
+                        <ng-multiselect-dropdown formControlName="txtPersonaje" type="text" aria-label="personaje" class="form-control"
+                          [placeholder]="'Seleccione personaje'"
+                          [disabled]="vFiltroPersonaje"
+                          [data]="dataPersonaje$"
+                          [(ngModel)]="selectedItems"
+                          [settings]="dropdownSettings"
+                          (onSelect)="selectPersonaje($event)"
+                          (onDeSelect)="onItemDeSelect($event)"
+                        >
+                        </ng-multiselect-dropdown>
+                        <!-- <ng-autocomplete formControlName="txtPersonaje" type="text" aria-label="personaje" class="form-control"
+                        [data]="dataPersonaje$"
+                        [disabled]="vFiltroPersonaje"
+                        (selected)='selectPersonaje($event)'
+                        (inputCleared) ='LimpiarPersonaje()'
+                        placeHolder="Ingrese un personaje"
+                        [searchKeyword]="cboNombre"
+                        [itemTemplate]="itemTemplatePersonaje"
+                        [notFoundTemplate]="notFoundTemplatePersonaje">                                 
+                    </ng-autocomplete>
+                    <ng-template #itemTemplatePersonaje let-item>
+                        <a [innerHTML]="item.name"></a>
+                        </ng-template>
+                        
+                        <ng-template #notFoundTemplatePersonaje let-notFound>
+                        <div [innerHTML]="notFound"></div>
+                        </ng-template> -->
+                      </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="input-group">
+                            <span class="input-group-text">Por Ubicacion</span>
+                            <ng-multiselect-dropdown formControlName="txtUbicacion" type="text" aria-label="personaje" class="form-control"
+                              [placeholder]="'Seleccione Ubicacion'"
+                              [disabled]="vFiltroUbicacion"
+                              [data]="dataUbicacion$"
+                              [(ngModel)]="selectedItemsUbicacion"
+                              [settings]="dropdownSettings"
+                              (onSelect)="selectUbicacion($event)"
+                              (onDeSelect)="onItemDeSelectUbicacion($event)"
+                            >
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                   <div class="col-lg-3">
+                       <div class="input-group">
+                           <span class="input-group-text">Por Episodio</span>
+                           <ng-multiselect-dropdown formControlName="txtEpisodio" type="text" aria-label="personaje" class="form-control"
+                              [placeholder]="'Seleccione Episodio'"
+                              [disabled]="vFiltroEpisodio"
+                              [data]="dataEpisodio$"
+                              [(ngModel)]="selectedItemsEpisodio"
+                              [settings]="dropdownSettings"
+                              (onSelect)="selectEpisodio($event)"
+                              (onDeSelect)="onItemDeSelectEpisodio($event)"
+                            >
+                            </ng-multiselect-dropdown>
+                         </div>
+                       </div>
+                       <div class="col-lg-1">
+                        <div class="input-group">
+                            <button type="submit" class="btn btn-primary mb-3">Buscar</button>
+                          </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+<div class="row mt-4">
+    <div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="text-center">Lista de personajes</h5>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+                  <button class="btn btn-success me-md-2" type="button" data-bs-toggle="modal" data-bs-target="#comparacionPersonajes">Comparar</button>
+                </div>
+                <div class="row">
+                        <div class="col-lg-4" *ngFor="let personajes of listFinal; let i = index">
+                            <div class="card" style="cursor: pointer;" (click)="seleccionarPersonaje(personajes)">
+                                <img [src]="personajes.foto" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{personajes.nombre}}</h5>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                  <li class="list-group-item">Genero: {{personajes.genero}}</li>
+                                  <li class="list-group-item">Ubicacion: {{personajes.ubicacion}} </li>
+                                  <li class="list-group-item">Episodio: {{ personajes.episodio }}</li>
+                                </ul>
+                              </div>
+                    </div>
+                    <div class="col-lg-4" *ngFor="let ubicacion of listFinalUbicacion; let i = index">
+                        <div class="card">
+                            <div class="card-body">
+                              <h5 class="card-title">{{ubicacion.nombre}}</h5>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              <li class="list-group-item">Tipo: {{ubicacion.tipo}}</li>
+                              <li class="list-group-item">Dimension: {{ubicacion.dimension}} </li>
+                              <li class="list-group-item">Cantidad de residentes: {{ ubicacion.cantidad_residentes }}</li>
+                              <li class="list-group-item">Fecha de creación: {{ ubicacion.fecha_creacion }}</li>
+                            </ul>
+                          </div>
+                </div>
+                <div class="col-lg-4" *ngFor="let episodio of listBusquedaEpisodio; let i = index">
+                    <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title">{{episodio.name}}</h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                          <li class="list-group-item">Fecha de emisión: {{episodio.air_date}}</li>
+                          <li class="list-group-item">Codigo de episodio: {{episodio.episode}} </li>
+                        </ul>
+                        <div class="card-body">
+                            <button type="button" class="btn btn-primary" (click)="cargarDetalle(episodio.name, episodio.characters)" data-bs-toggle="modal" data-bs-target="#detalleEpisodio">
+                                + Info
+                              </button>
+                          </div>
+                      </div>
+                 </div>
+            </div>
+           </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="modal fade" id="detalleEpisodio" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Episodio: {{nombreEpisodio}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h5 class="text-center">Lista de personajes</h5>
+          <div class="row">
+            <div class="col-lg-4" *ngFor="let personajes of listPersonajesEpisodiosFinal; let i = index">
+                <div class="card">
+                    <img [src]="personajes.foto" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">{{personajes.nombre}}</h5>
+                    </div>
+                  </div>
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="modal fade" id="comparacionPersonajes" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Comparacón</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h5 class="text-center">Personajes a comparar</h5>
+          <div class="row">
+            <div class="col-lg-4" *ngFor="let personajes of ltComparacion; let i = index">
+                <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">{{personajes.nombre}}</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">Genero: {{personajes.genero}}</li>
+                      <li class="list-group-item">Ubicacion: {{personajes.ubicacion}} </li>
+                      <li class="list-group-item">Especie: {{ personajes.especie }}</li>
+                      <li class="list-group-item">Estado: {{ personajes.estado }}</li>
+                    </ul>
+                  </div>
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
